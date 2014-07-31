@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">灯光终端</string>
+    <string name="action_settings">Settings</string>
+	<string name="setting">IP设置</string>
+	<string name="update_dev">刷新设备</string>
+	<string name="btn_on">开</string>
+	<string name="btn_off">关</string>
+	<string name="btn_tasklist">定时任务</string>
+	<string name="display_tasks">定时任务</string>
+	<string name="add_task">添加任务</string>
+	<string name="select_devices_btn">选择设备</string>
+	<string name="time_btn">设置时间</string>
+	<string name="dow_btn">设置星期</string>
+	<string name="lightness_btn">设置亮度</string>
+	<string name="confirm_btn">确定</string>
+	<string name="cancel_btn">取消</string>
+	<string name="all_on">全部打开</string>
+	<string name="all_off">全部关闭</string>
+</resources>

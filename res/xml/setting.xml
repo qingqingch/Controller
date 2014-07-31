@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <EditTextPreference
+        android:title="主机IP地址"
+        android:key="ip"
+        android:summary="点击填写主机IP地址"></EditTextPreference>
+</PreferenceScreen>

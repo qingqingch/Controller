@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/all_on"
+        android:title="@string/all_on">
+    </item>
+    <item
+        android:id="@+id/all_off"
+        android:title="@string/all_off">
+    </item>
+    <item
+	    android:id="@+id/display_tasks"
+	    android:title="@string/display_tasks">
+	</item> 
+	<item 
+	    android:id="@+id/update_dev"
+	    android:title="@string/update_dev">
+	</item>
+</menu>
