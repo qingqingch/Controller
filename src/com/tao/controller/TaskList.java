@@ -35,20 +35,25 @@ public class TaskList extends Activity {
 	private Receiver recver;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.schedule_list);
 		listView = (ListView) findViewById(R.id.schedule_list);
 		listView.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) 
+			{
 				String rowid = listData.get(position).get("rowid");
 				String request = "cmd_type=toggle_task&rowid=" + rowid + "&ispaused=";
 				CheckBox cb = (CheckBox)view.findViewById(R.id.item_cb);
-				if (cb.isChecked()) {
+				if (cb.isChecked()) 
+				{
 					cb.setChecked(false);
 					request += "1";
 					Toast.makeText(TaskList.this, "任务已关闭", Toast.LENGTH_SHORT).show();
-				} else {
+				} 
+				else 
+				{
 					cb.setChecked(true);
 					request += "0&time=" + listData.get(position).get("time");
 					request += "&dow=" + listData.get(position).get("dow");
@@ -63,29 +68,37 @@ public class TaskList extends Activity {
 		listAdapter = new TaskAdapter(this,  listData);
 		listView.setAdapter(listAdapter);
 	}
-	protected void onStart() {
+	protected void onStart() 
+	{
 		super.onStart();
 		registerForContextMenu(listView);
 		registRecer();
 		new Thread(new SendCmdThread("cmd_type=update_task")).start();
 	}
-	private void registRecer() {
+	private void registRecer() 
+	{
 		recver = new Receiver();
 		IntentFilter intfilter = new IntentFilter();
 		intfilter.addAction("update_task");
 		registerReceiver(recver, intfilter);
 	}
-	protected void onStop() {
+	protected void onStop() 
+	{
 		super.onStop();
 		unregisterReceiver(recver);
 	}
-	private class Receiver extends BroadcastReceiver {
+	private class Receiver extends BroadcastReceiver 
+	{
 		@Override
-		public void onReceive(Context context, Intent intent) {
+		public void onReceive(Context context, Intent intent) 
+		{
 			listData.clear();
-			if (intent.getStringExtra("data").equals("")) {
+			if (intent.getStringExtra("data").equals("")) 
+			{
 				Toast.makeText(TaskList.this, "没有计划", Toast.LENGTH_SHORT).show();
-			} else {
+			} 
+			else 
+			{
 				String[] items = intent.getStringExtra("data").split("\\(");
 				
 				for (String item : items) {
@@ -115,14 +128,17 @@ public class TaskList extends Activity {
 		}
 	}
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
 		getMenuInflater().inflate(R.menu.tasklist_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
 		int id = item.getItemId();
-		if (id == R.id.add_task) {
+		if (id == R.id.add_task) 
+		{
 			Intent intent = new Intent(TaskList.this, TaskEdit.class);
 			intent.putExtra("rowid", "");
 			startActivity(intent);
@@ -130,10 +146,12 @@ public class TaskList extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {
+	public boolean onContextItemSelected(MenuItem item) 
+	{
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
 		String rowid = listData.get(acmi.position).get("rowid");
-		switch(item.getItemId()) {
+		switch(item.getItemId()) 
+		{
 		case 1:
 			Intent intent = new Intent(TaskList.this, TaskEdit.class);
 			intent.putExtra("rowid", rowid);
@@ -156,7 +174,8 @@ public class TaskList extends Activity {
 		return super.onContextItemSelected(item);
 	}
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) 
+	{
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(0, 1, 0, "编辑");
 		menu.add(0, 2, 0, "删除");
@@ -164,53 +183,60 @@ public class TaskList extends Activity {
 	}
 }
 
-class TaskAdapter extends BaseAdapter {
+class TaskAdapter extends BaseAdapter 
+{
 
 	private ArrayList<HashMap<String, String>> data;
 	private LayoutInflater inflater;
 	
-	public TaskAdapter(Context context, ArrayList<HashMap<String, String>> data) {
+	public TaskAdapter(Context context, ArrayList<HashMap<String, String>> data) 
+	{
 		this.data = data;
 		this.inflater = LayoutInflater.from(context);
 	}
 	@Override
-	public int getCount() {
+	public int getCount() 
+	{
 		return data.size();
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public Object getItem(int position)
+	{
 		return data.get(position);
 	}
 
 	@Override
-	public long getItemId(int position) {
+	public long getItemId(int position) 
+	{
 		return position;
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent) 
+	{
 		ViewHolder holder = null;
-		if (convertView == null) {
+		if (convertView == null) 
+		{
 			holder = new ViewHolder();
 			convertView = inflater.inflate(R.layout.task_item, null);
 			holder.text = (TextView) convertView.findViewById(R.id.item_tv);
-			//holder.weeks = (TextView) convertView.findViewById(R.id.item_weeks);
 			holder.checkbox = (CheckBox) convertView.findViewById(R.id.item_cb);
 			convertView.setTag(holder);
-		} else {
+		} 
+		else 
+		{
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.text.setText(data.get(position).get("main"));
-		//holder.weeks.setText(data.get(position).get("sub"));
 		if (data.get(position).get("ispaused").equals("0")) holder.checkbox.setChecked(true);
 		else holder.checkbox.setChecked(false);
 		return convertView;
 	}
 	
-	final class ViewHolder {
+	final class ViewHolder 
+	{
 		TextView text;
-		//TextView weeks;
 		CheckBox checkbox;
 	}
 }

@@ -1,6 +1,7 @@
 package com.tao.controller;
 
-public class CmdType {
+public class CmdType 
+{
 	public static final int UPDATE_DEVICE = 1;
 	public static final int UPDATE_STATUS = 2;
 	public static final int UPDATE_TASK = 3;

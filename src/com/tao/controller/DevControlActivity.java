@@ -13,7 +13,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class DevControlActivity extends Activity implements OnClickListener, OnSeekBarChangeListener{
+public class DevControlActivity extends Activity implements OnClickListener, OnSeekBarChangeListener
+{
 
 	private String device_path;
 	private String device_name;
@@ -35,7 +36,8 @@ public class DevControlActivity extends Activity implements OnClickListener, OnS
 	                             R.drawable.d10};
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dev_control);
 		btn_on = (Button) findViewById(R.id.btn_on);
@@ -48,7 +50,8 @@ public class DevControlActivity extends Activity implements OnClickListener, OnS
 	}
 
 	@Override
-	protected void onStart() {
+	protected void onStart() 
+	{
 		super.onStart();
 		Intent intent = getIntent();
 		device_name = intent.getStringExtra("device_name");
@@ -59,17 +62,20 @@ public class DevControlActivity extends Activity implements OnClickListener, OnS
 		new Thread(new SendCmdThread("cmd_type=update_status")).start();
 	}
 	
-	private void registRecer() {
+	private void registRecer() 
+	{
 		recver = new Receiver();
 		IntentFilter intfilter = new IntentFilter();
 		intfilter.addAction("update_status");
 		registerReceiver(recver, intfilter);
 	}
-	protected void onStop() {
+	protected void onStop() 
+	{
 		super.onStop();
 		unregisterReceiver(recver);
 	}
-	private class Receiver extends BroadcastReceiver {
+	private class Receiver extends BroadcastReceiver 
+	{
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -83,44 +89,39 @@ public class DevControlActivity extends Activity implements OnClickListener, OnS
 	}
 
 	@Override
-	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) 
+	{
 		
 	}
 
 	@Override
-	public void onStartTrackingTouch(SeekBar seekBar) {
+	public void onStartTrackingTouch(SeekBar seekBar) 
+	{
 		
 	}
 
 	@Override
-	public void onStopTrackingTouch(SeekBar seekBar) {
+	public void onStopTrackingTouch(SeekBar seekBar) 
+	{
 		imageView_lights.setImageResource(imgs[(int)Math.ceil(seekBar.getProgress()/12)]);
-		//imageView_lights.setBackgroundResource(imgs[(int)Math.ceil(seekBar.getProgress()/12)]);
 		new Thread(new SendCmdThread("cmd_type=change_lightness&lightness="+seekBar.getProgress()+"&device_path="+device_path)).start();
 	}
 
 	@Override
-	public void onClick(View v) {
+	public void onClick(View v) 
+	{
 		switch (v.getId())
 		{
 		case R.id.btn_on:
 			imageView_lights.setImageResource(R.drawable.d10);
-			//imageView_lights.setBackgroundResource(R.drawable.d10);
 			seekBar_lightness.setProgress(127);
 			new Thread(new SendCmdThread("cmd_type=change_lightness&lightness=127&device_path="+device_path)).start();
 			break;
 		case R.id.btn_off:
 			imageView_lights.setImageResource(R.drawable.d0);
-			//imageView_lights.setBackgroundResource(R.drawable.d0);
 			seekBar_lightness.setProgress(0);
 			new Thread(new SendCmdThread("cmd_type=change_lightness&lightness=0&device_path="+device_path)).start();
 			break;
-//		case R.id.btn_tasklist:
-//			Intent intent = new Intent(DevControlActivity.this, TaskList.class);
-//			intent.putExtra("device_name", device_name);
-//			intent.putExtra("device_path", device_path);
-//			startActivity(intent);
-//			break;
 		}
 	}
 }

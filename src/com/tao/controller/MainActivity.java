@@ -27,8 +27,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
-
+public class MainActivity extends Activity 
+{
 	private ListView dev_list;
 	private EditText devName;
 	private ProgressDialog progressDialog;
@@ -39,7 +39,8 @@ public class MainActivity extends Activity {
 	public static String ipaddr;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dev_list);
 		setTitle("设备列表");
@@ -53,19 +54,23 @@ public class MainActivity extends Activity {
 		dev_list.setAdapter(listAdapter);
 	}
 	@Override
-	protected void onStart() {
+	protected void onStart() 
+	{
 		super.onStart();
 		registRecer();
-		if (ipaddr == null) {
+		if (ipaddr == null) 
+		{
 			SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
 			ipaddr = prefs.getString("ipaddr", "");
 			startService(new Intent(this, UpdateService.class));
 		}
-		else {
+		else 
+		{
 			new Thread(new SendCmdThread("cmd_type=update_device")).start();
 		}
 	}
-	private void registRecer() {
+	private void registRecer() 
+	{
 		recver = new Receiver();
 		IntentFilter intfilter = new IntentFilter();
 		intfilter.addAction("update_device");
@@ -77,18 +82,23 @@ public class MainActivity extends Activity {
 		registerReceiver(recver, intfilter);
 	}
 	
-	protected void onStop() {
+	protected void onStop() 
+	{
 		super.onStop();
 		if (recver != null)
 			unregisterReceiver(recver);
 	}
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy() 
+	{
 		super.onDestroy();
-		try {
+		try 
+		{
 			if (SingleSocket.getInstance().isConnected())
 				SingleSocket.getInstance().close();
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			e.printStackTrace();
 		}
 		
@@ -102,39 +112,52 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
 		getMenuInflater().inflate(R.menu.dev_list_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
 		int id = item.getItemId();
-		if (id == R.id.update_dev) {
+		if (id == R.id.update_dev) 
+		{
 			Builder dialog = new AlertDialog.Builder(MainActivity.this);
 			devName = new EditText(MainActivity.this);
 			dialog.setTitle("输入设备数量").setView(devName);
 			dialog.setPositiveButton("确定", new ButtonClick(-1));
 			dialog.setNegativeButton("取消", null);
 			dialog.show();
-		} else if (id == R.id.display_tasks) {
+		} 
+		else if (id == R.id.display_tasks) 
+		{
 			Intent intent = new Intent(MainActivity.this, TaskList.class);
 			startActivity(intent);
-		} else if (id == R.id.all_on) {
+		} 
+		else if (id == R.id.all_on) 
+		{
 			new Thread(new SendCmdThread("cmd_type=commandAll&lightness=127")).start();
-		} else if (id == R.id.all_off) {
+		} 
+		else if (id == R.id.all_off) 
+		{
 			new Thread(new SendCmdThread("cmd_type=commandAll&lightness=0")).start();
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	
-	private class Receiver extends BroadcastReceiver {
+	private class Receiver extends BroadcastReceiver 
+	{
 		@Override
-		public void onReceive(Context context, Intent intent) {
+		public void onReceive(Context context, Intent intent) 
+		{
 			String result = intent.getStringExtra("data");
-			if (intent.getAction().equals("update_device")) {
-				if (result.equals("")) {
+			if (intent.getAction().equals("update_device")) 
+			{
+				if (result.equals("")) 
+				{
 					Toast.makeText(MainActivity.this, "No device!", Toast.LENGTH_SHORT).show();
 					return;
 				}
@@ -155,9 +178,12 @@ public class MainActivity extends Activity {
 					listData.add(map);
 				}
 				listAdapter.notifyDataSetChanged();
-			} else if (intent.getAction().equals("routing_device")) {
+			} 
+			else if (intent.getAction().equals("routing_device")) 
+			{
 				int progress = Integer.parseInt(result);
-				if (progressDialog == null) {
+				if (progressDialog == null) 
+				{
 					progressDialog = new ProgressDialog(MainActivity.this);
 					progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 					progressDialog.setMessage("处理设备");
@@ -166,42 +192,57 @@ public class MainActivity extends Activity {
 					progressDialog.show();
 					progressDialog.setProgress(progress);
 					if (progress == 100) progressDialog.cancel();
-				} else {
+				} 
+				else 
+				{
 					progressDialog.show();
 					progressDialog.setProgress(progress);
 					if (progress == 100) progressDialog.cancel();
 				}
-			} else if (intent.getAction().equals("debug_info")) {
+			} 
+			else if (intent.getAction().equals("debug_info")) 
+			{
 				progressDialog.cancel();
 				Toast.makeText(MainActivity.this, "没找到这些设备"+result, Toast.LENGTH_LONG).show();
-			} else if (intent.getAction().equals("server_not_found")) {
-				//Toast.makeText(MainActivity.this, "没找到这些设备", Toast.LENGTH_LONG).show();
+			} 
+			else if (intent.getAction().equals("server_not_found")) 
+			{
 				findServerDialog.cancel();
 				new AlertDialog.Builder(MainActivity.this).setTitle("提醒").setMessage("没有搜索到服务器！").
 				setPositiveButton("确认", new OnClickListener() {
-					public void onClick(DialogInterface arg0, int arg1) {
+					public void onClick(DialogInterface arg0, int arg1) 
+					{
 						MainActivity.this.finish();
 					}
 				}).show();
-			} else if (intent.getAction().equals("server_searching")) {
+			} 
+			else if (intent.getAction().equals("server_searching")) 
+			{
 				//int progress = Integer.parseInt(result);
-				if (findServerDialog == null) {
+				if (findServerDialog == null) 
+				{
 					findServerDialog = new ProgressDialog(MainActivity.this);
 					findServerDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 					findServerDialog.setMessage("正在搜索主机...");
 					findServerDialog.show();
-				} else {
+				} 
+				else 
+				{
 					findServerDialog.show();
 				}
-			} else if (intent.getAction().equals("server_found")) {
+			} 
+			else if (intent.getAction().equals("server_found")) 
+			{
 				findServerDialog.cancel();
 			}
 		}
 	}
 	
-	private class ItemPressHandler implements OnItemClickListener, OnItemLongClickListener {
+	private class ItemPressHandler implements OnItemClickListener, OnItemLongClickListener 
+	{
 		@Override
-		public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
+		{
 			Builder dialog = new AlertDialog.Builder(MainActivity.this);
 			devName = new EditText(MainActivity.this);
 			dialog.setTitle("输入新设备名").setView(devName);
@@ -212,7 +253,8 @@ public class MainActivity extends Activity {
 		}
 
 		@Override
-		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
+		{
 			Intent intent = new Intent(MainActivity.this, DevControlActivity.class);
 			intent.putExtra("device_index", arg2);
 			intent.putExtra("device_name", listData.get(arg2).get("name"));
@@ -221,29 +263,41 @@ public class MainActivity extends Activity {
 		}
 		
 	}
-	private class ButtonClick implements OnClickListener {
+	private class ButtonClick implements OnClickListener 
+	{
 		private int itemIndex;
-		public ButtonClick(int index) {
+		public ButtonClick(int index) 
+		{
 			itemIndex = index;
 		}
 		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			if (which == DialogInterface.BUTTON_POSITIVE) {
+		public void onClick(DialogInterface dialog, int which) 
+		{
+			if (which == DialogInterface.BUTTON_POSITIVE) 
+			{
 				String name = devName.getText().toString();
-				if (!name.isEmpty()) {
+				if (!name.isEmpty()) 
+				{
 					if (itemIndex >= 0)
 						new Thread(new SendCmdThread("cmd_type=change_name&id="+listData.get(itemIndex).get("path").substring(0, 1)+"&name="+name)).start();
-					else {
-						try {
+					else 
+					{
+						try 
+						{
 							Integer.parseInt(name);
 							new Thread(new SendCmdThread("cmd_type=routing_device&device_number=" + name)).start();
-						} catch (NumberFormatException e) {
+						} 
+						catch (NumberFormatException e) 
+						{
 							Toast.makeText(MainActivity.this, "请输入一个正整数", Toast.LENGTH_SHORT).show();
-						} catch (Exception e) {
+						} 
+						catch (Exception e) 
+						{
 							Toast.makeText(MainActivity.this, "发生错误", Toast.LENGTH_SHORT).show();
 						}
 					}
-				}else
+				}
+				else
 					Toast.makeText(getApplicationContext(), "不能为空", Toast.LENGTH_SHORT).show();
 			}
 		}
