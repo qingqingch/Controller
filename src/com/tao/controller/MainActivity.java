@@ -282,7 +282,7 @@ public class MainActivity extends Activity
 					{
 						String path = listData.get(itemIndex).get("path");
 						int i = path.indexOf(",");
-						String id = i == -1 ? path : path.substring(0, i)
+						String id = i == -1 ? path : path.substring(0, i);
 						new Thread(new SendCmdThread("cmd_type=change_name&id="+id+"&name="+name)).start();
 					}
 					else 
