@@ -279,7 +279,12 @@ public class MainActivity extends Activity
 				if (!name.isEmpty()) 
 				{
 					if (itemIndex >= 0)
-						new Thread(new SendCmdThread("cmd_type=change_name&id="+listData.get(itemIndex).get("path").substring(0, 1)+"&name="+name)).start();
+					{
+						String path = listData.get(itemIndex).get("path");
+						int i = path.indexOf(",");
+						String id = i == -1 ? path : path.substring(0, i)
+						new Thread(new SendCmdThread("cmd_type=change_name&id="+id+"&name="+name)).start();
+					}
 					else 
 					{
 						try 
